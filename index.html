@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>Sales Management System</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css">
+
+</head>
+
+
+<body>
+  
+
+<header class="header">
+
+  <div class="header-content">
+
+    <h1>
+      Beshal Beauty
+    </h1>
+
+  </div>
+  <p>
+      Where Beauty Meets Confidence
+    </p>
+  <div>
+
+  </div>
+
+</header>
+
+<main class="container">
+
+
+  <section class="card">
+
+
+    <div class="card-header">
+
+    </div>
+
+    <div
+      id="message"
+      class="message">
+    </div>
+
+    <form id="salesForm">
+
+      <!-- PRODUCT -->
+
+      <div class="form-group">
+
+        <label for="productName">
+
+          Product
+
+          <span class="required">
+            *
+          </span>
+
+        </label>
+
+
+        <select
+          id="productName"
+          required>
+
+           <option value=""></option>
+          <option value="Perfume">Perfumes</option>
+          <option value="Body Lotion">Body Lotions</option>
+          <option value="Body Oil">Body Oils</option>
+          <option value="Face Cream">Face Cream</option>
+          <option value="Bathing Soap">Bathing Soap</option>
+          <option value="Shower Gel">Shower Gel</option>
+          <option value="Face Serum/Toner">Face Serum/Toner</option>
+          <option value="Body Scrub/Wash">Body Scrub/Wash</option>
+          <option value="Sunscreen">Sunscreen</option>
+          <option value="Jelly">Jelly</option>
+          <option value="Shower Cream">Shower Cream</option>
+          <option value="Gloves">Face Wash</option>
+          <option value="Face Mask">Face Mask</option>
+          <option value="Hand Cream">Hand Cream</option>
+          <option value="Beshal">Beshal</option>
+          <option value="Other">Other</option>
+          
+        
+
+        </select>
+
+      </div>
+
+
+
+      <!-- BRAND -->
+
+      <div class="form-group">
+
+        <label for="brand">Brand</label>
+        <select
+          id="brand"
+          required>
+
+  <option value=""></option>
+  <option value="Bebecom">Bebecom</option>
+  <option value="Beshal">Beshal</option>
+  <option value="Dove">Dove</option>
+  <option value="Dr_rashel">Dr. Rashel</option>
+  <option value="jergens">Jergens</option>
+  <option value="Kojic">Kojic</option>
+  <option value="Melano">Melano Acne</option>
+  <option value="Molato">Molato</option>
+  <option value="Palmer">Palmer</option>
+  <option value="Parachute">Parachute</option>
+  <option value="Pure-gold">Pure Gold</option>
+  <option value="Pyary">Pyary</option>
+  <option value="Saam">Saam</option>
+  <option value="Soltan">Soltan</option>
+  <option value="Veets_gold">Veets Gold</option>
+  <option value="White_gold">White Gold</option>
+  <option value="Vaseline">Vaseline</option>
+  <option value="Ordinary">Ordinary</option>
+  <option value="Victoria Secret">Victoria Secret</option>
+  <option value="American Dream">American Dream</option>
+  <option value="Other">Other</option>
+
+
+        </select>
+
+      </div>
+
+
+
+      <!-- CATEGORY -->
+
+      <div class="form-group">
+
+        <label for="category">
+
+          Category
+
+        </label>
+
+
+        <select
+          id="category"
+          required>
+          <option value=""></option>
+          <option value="almond_oil">Almond Oil</option>
+    <option value="Cocoa Butter">Cocoa Butter</option>
+    <option value="Daily Brightening">Beshal</option>
+    <option value="Coconut">Coconut</option>
+    <option value="Carrot">Carrot</option>
+    <option value="Tumeric">Tumeric</option>
+    <option value="Advance_repair">Advance Repair</option>
+    <option value="Moisturizer">Moisturizer</option>
+    <option value="Brightening">Brightening</option>
+    <option value="Lightening">Lightening</option>
+    <option value="1 Pack">1Pack</option>
+    <option value="2 Pack">2Pack</option>
+    <option value="Veets_gold">Veets Gold</option>
+    <option value="Norturing Moisture">Norturing Moisture</option>
+    <option value="Victoria Secret">Victoria Secret</option>
+    <option value="Beshal">Beshal</option>
+    <option value="Other">Other</option>
+
+        </select>
+
+      </div>
+      <!-- QUANTITY + PRICE -->
+      <div class="two-columns">
+        <div class="form-group">
+
+          <label for="quantity">
+            Quantity
+            <span class="required">
+              *
+            </span>
+
+          </label>
+
+          <input
+            type="number"
+            id="quantity"
+            min="1"
+            value="1"
+            required>
+
+        </div>
+        <div class="form-group">
+
+          <label for="price">
+            Price
+          </label>
+          <input
+            type="number"
+            id="price">
+
+        </div>
+      </div>
+      <!-- TOTAL -->
+      <div class="total-box">
+
+        <div class="total-label">
+          TOTAL SALE KSH.
+
+        </div>
+        <div
+          id="total"
+          class="total-value">
+          0.00
+        </div>
+
+      </div>
+      <!-- DATE -->
+
+      <div class="form-group">
+
+        <label for="date">
+
+          Date
+          <span class="required">
+            *
+          </span>
+
+        </label>
+
+
+        <input
+          type="date"
+          id="date"
+          required>
+
+      </div>
+
+      <!-- PAYMENT -->
+
+      <div class="form-group">
+
+        <label for="paymentMethod">
+
+          Payment Method
+
+          <span class="required">
+            *
+          </span>
+
+        </label>
+
+        <select
+          id="paymentMethod"
+          required>
+
+          <option value=""></option>
+          <option value="Mpesa">Mpesa</option>
+          <option value="Cash">Cash</option>
+          <option value="Paybill">Paybill</option>
+          <option value="Bank Transfer">BankTransfer</option>
+
+        </select>
+
+      </div>
+      <!-- SUBMIT -->
+      <button
+        type="submit"
+        id="submitButton">
+
+        Submit Sale
+
+      </button>
+    </form>
+
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
