@@ -26,8 +26,8 @@ body {
 .header {
 position: fixed;
   top: 0;
-  left: 100;
-  width: 50%;
+  right: 100;
+  width: 100%;
   z-index: 1000;
   background: #ca7c7cd4;
 
