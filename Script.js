@@ -5,55 +5,58 @@
 const API_URL =
   'https://script.google.com/macros/s/AKfycbzJtGK9EzituwYm0ZAk_TzzCOcDmjvFWRxIU3gRW3Rp_tR71VZOBykhOBTaO6HpwurV/exec';
 
-
-// 
-// PAGE LOAD
-// 
-
 document.addEventListener('DOMContentLoaded', function () {
 
   // Set today's date
   setToday();
 
-  // Calculate initial total
+  // Get HTML elements
+  const quantityInput = document.getElementById('quantity');
+  const priceInput = document.getElementById('price');
+  const salesForm = document.getElementById('salesForm');
+
+  // Calculate when quantity changes
+  quantityInput.addEventListener('input', calculateTotal);
+
+  // Calculate when price changes
+  priceInput.addEventListener('input', calculateTotal);
+
+  // Submit form
+  salesForm.addEventListener('submit', submitSale);
+
+  // Initial calculation
   calculateTotal();
 
 });
-// 
+
+
+// ==========================================
 // SET TODAY'S DATE
-// 
+// ==========================================
 
 function setToday() {
 
   const today = new Date();
 
-  const year =
-    today.getFullYear();
+  const year = today.getFullYear();
 
-  const month =
-    String(today.getMonth() + 1).padStart(2, '0');
+  const month = String(
+    today.getMonth() + 1
+  ).padStart(2, '0');
 
-  const day =
-    String(today.getDate()).padStart(2, '0');
+  const day = String(
+    today.getDate()
+  ).padStart(2, '0');
 
   document.getElementById('date').value =
-    year + '-' + month + '-' + day;
+    `${year}-${month}-${day}`;
 
 }
 
 
 // ==========================================
-// QUANTITY / PRICE → TOTAL
+// CALCULATE TOTAL
 // ==========================================
-
-document
-  .getElementById('quantity')
-  .addEventListener('input', calculateTotal);
-
-document
-  .getElementById('price')
-  .addEventListener('input', calculateTotal);
-
 
 function calculateTotal() {
 
@@ -77,293 +80,262 @@ function calculateTotal() {
 
 
 // ==========================================
-// SUBMIT FORM
+// SUBMIT SALE
 // ==========================================
 
-document
-  .getElementById('salesForm')
-  .addEventListener('submit', async function (event) {
+async function submitSale(event) {
 
-    event.preventDefault();
-
-
-    // --------------------------------------
-    // GET VALUES FROM HTML
-    // --------------------------------------
-
-    const productName =
-      document.getElementById('productName').value;
-
-    const brand =
-      document.getElementById('brand').value;
-
-    const category =
-      document.getElementById('category').value;
-
-    const quantity =
-      document.getElementById('quantity').value;
-
-    const price =
-      document.getElementById('price').value;
-
-    const date =
-      document.getElementById('date').value;
-
-    const paymentMethod =
-      document.getElementById('paymentMethod').value;
+  // Stop page refresh
+  event.preventDefault();
 
 
-    // --------------------------------------
-    // VALIDATION
-    // --------------------------------------
+  const submitButton =
+    document.getElementById('submitButton');
 
-    if (!productName) {
+
+  // ========================================
+  // GET FORM VALUES
+  // ========================================
+
+  const productName =
+    document.getElementById('productName').value;
+
+  const brand =
+    document.getElementById('brand').value;
+
+  const category =
+    document.getElementById('category').value;
+
+  const quantity =
+    document.getElementById('quantity').value;
+
+  const price =
+    document.getElementById('price').value;
+
+  const date =
+    document.getElementById('date').value;
+
+  const paymentMethod =
+    document.getElementById('paymentMethod').value;
+
+
+  // ========================================
+  // VALIDATION
+  // ========================================
+
+  if (!productName) {
+    showMessage('Please select a product.', false);
+    return;
+  }
+
+  if (!brand) {
+    showMessage('Please select a brand.', false);
+    return;
+  }
+
+  if (!category) {
+    showMessage('Please select a category.', false);
+    return;
+  }
+
+  if (!quantity || Number(quantity) <= 0) {
+    showMessage('Please enter a valid quantity.', false);
+    return;
+  }
+
+  if (!price || Number(price) <= 0) {
+    showMessage('Please enter a valid price.', false);
+    return;
+  }
+
+  if (!date) {
+    showMessage('Please select a date.', false);
+    return;
+  }
+
+  if (
+    !paymentMethod ||
+    paymentMethod === 'Select Option'
+  ) {
+    showMessage(
+      'Please select a payment method.',
+      false
+    );
+    return;
+  }
+
+
+  // ========================================
+  // CALCULATE TOTAL
+  // ========================================
+
+  const total =
+    Number(quantity) *
+    Number(price);
+
+
+  // ========================================
+  // DATA TO SEND
+  // ========================================
+
+  const saleData = {
+
+    productName: productName,
+
+    brand: brand,
+
+    category: category,
+
+    quantity: Number(quantity),
+
+    price: Number(price),
+
+    total: total,
+
+    date: date,
+
+    paymentMethod: paymentMethod
+
+  };
+
+
+  // ========================================
+  // DISABLE BUTTON
+  // ========================================
+
+  submitButton.disabled = true;
+
+  submitButton.textContent =
+    'Saving...';
+
+
+  try {
+
+    // ======================================
+    // SEND TO GOOGLE APPS SCRIPT
+    // ======================================
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+          method: 'POST',
+
+          headers: {
+            'Content-Type':
+              'text/plain;charset=utf-8'
+          },
+
+          body:
+            JSON.stringify(saleData)
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    // ======================================
+    // SUCCESS
+    // ======================================
+
+    if (result.success) {
 
       showMessage(
-        'Please select a product.',
+        'Sale recorded successfully! ' +
+        'Sale ID: ' +
+        result.saleId +
+        ' | Total: KSH. ' +
+        Number(result.total).toFixed(2),
+        true
+      );
+
+
+      resetForm();
+
+    } else {
+
+      showMessage(
+        result.message ||
+        'Unable to save sale.',
         false
       );
 
-      return;
     }
 
 
-    if (!brand) {
+  } catch (error) {
 
-      showMessage(
-        'Please select a brand.',
-        false
-      );
+    console.error(error);
 
-      return;
-    }
+    showMessage(
+      'Unable to submit sale. Check the Apps Script URL and deployment.',
+      false
+    );
 
-
-    if (!category) {
-
-      showMessage(
-        'Please select a category.',
-        false
-      );
-
-      return;
-    }
+  }
 
 
-    if (!quantity || Number(quantity) <= 0) {
+  // ========================================
+  // ENABLE BUTTON
+  // ========================================
 
-      showMessage(
-        'Please enter a valid quantity.',
-        false
-      );
+  submitButton.disabled = false;
 
-      return;
-    }
-    if (!price || Number(price) < 0) {
+  submitButton.textContent =
+    'Submit Sale';
 
-      showMessage(
-        'Please enter a valid price.',
-        false
-      );
-      return;
-    }
-    if (!date) {
-
-      showMessage(
-        'Please select a date.',
-        false
-      );
-
-      return;
-    }
-    if (
-      !paymentMethod ||
-      paymentMethod === 'Select Option'
-    ) {
-
-      showMessage(
-        'Please select a payment method.',
-        false
-      );
-
-      return;
-    }
-
-    // CALCULATE TOTAL //
-    const total =
-      Number(quantity) *
-      Number(price);
+}
 
 
-    // --------------------------------------
-    // DISABLE BUTTON
-    // --------------------------------------
+// ==========================================
+// RESET FORM
+// ==========================================
 
-    const submitButton =
-      document.getElementById('submitButton');
-
-    submitButton.disabled = true;
-
-    submitButton.textContent =
-      'Saving...';
-
-
-    // --------------------------------------
-    // CREATE SALE DATA
-    // --------------------------------------
-
-    const saleData = {
-
-      productName:
-        productName,
-
-      brand:
-        brand,
-
-      category:
-        category,
-
-      quantity:
-        Number(quantity),
-
-      price:
-        Number(price),
-
-      total:
-        total,
-
-      date:
-        date,
-
-      paymentMethod:
-        paymentMethod
-
-    };
-
-    // SEND DATA TO GOOGLE APPS SCRIPT// 
-
-    try {
-
-      const response =
-        await fetch(
-          API_URL,
-          {
-            method: 'POST',
-
-            headers: {
-              'Content-Type':
-                'text/plain;charset=utf-8'
-            },
-
-            body:
-              JSON.stringify(saleData)
-          }
-        );
-
-      const result =
-        await response.json();
-
-      // SUCCESS// 
-      if (result.success) {
-
-        showMessage(
-          'Brenda you successfully made a sale for! ' +
-          'Sale ID: ' +
-          result.saleId +
-          ' | Total: KSH. ' +
-          Number(result.total).toFixed(2),
-          true
-        );
-
-        // Reset form
-        resetForm();
-
-      }
-      // ERROR FROM APPS SCRIPT
-      // 
-      else {
-
-        showMessage(
-          result.message ||
-          'Unable to save the sale.',
-          false
-        );
-
-      }
-    } catch (error) {
-
-      showMessage(
-        'Unable to connect to the server. ' +
-        'Please check your internet connection ' +
-        'and Apps Script URL.',
-        false
-      );
-
-      console.error(
-        'Error:',
-        error
-      );
-
-    }
-// ENABLE BUTTON AGAIN//
-
-    submitButton.disabled = false;
-
-    submitButton.textContent =
-      'Submit Sale';
-
-  });
-// RESET FORM//
 function resetForm() {
 
   document
     .getElementById('salesForm')
     .reset();
 
-  // Reset quantity
+
   document.getElementById('quantity').value =
     1;
 
-  // Reset payment dropdown
-  document.getElementById('paymentMethod').value =
-    'Select Option';
 
-  // Reset total
   document.getElementById('total').textContent =
     '0.00';
 
 
-  // Put today's date back
   setToday();
 
 }
-// SHOW SUCCESS / ERROR MESSAGE//
-function showMessage(
-  text,
-  success
-) {
+
+
+// ==========================================
+// SHOW MESSAGE
+// ==========================================
+
+function showMessage(text, success) {
 
   const message =
     document.getElementById('message');
 
-  message.textContent =
-    text;
+
+  message.textContent = text;
+
 
   message.className =
-    'message ' +
-    (success
-      ? 'success'
-      : 'error');
+    success
+      ? 'message success'
+      : 'message error';
+
 
   message.style.display =
     'block';
-  // Scroll to message
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
 
-  // Hide after 7 seconds
+
   setTimeout(function () {
 
     message.style.display =
@@ -372,3 +344,5 @@ function showMessage(
   }, 7000);
 
 }
+```
+
