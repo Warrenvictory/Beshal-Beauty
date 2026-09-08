@@ -387,7 +387,7 @@ async function submitSale(event) {
     if (result.success) {
 
       showMessage(
-        'You successfully made a sale! ' +
+        'Brenda, you successfully made a sale! for' +
         'Sale ID: ' +
         result.saleId +
         ' | Total: KSH. ' +
