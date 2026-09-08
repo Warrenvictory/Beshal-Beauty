@@ -2,8 +2,6 @@
 
 const API_URL =
   'https://script.google.com/macros/s/AKfycbzJtGK9EzituwYm0ZAk_TzzCOcDmjvFWRxIU3gRW3Rp_tR71VZOBykhOBTaO6HpwurV/exec';
-
-
 // ==========================================
 // PAGE LOAD
 // ==========================================
